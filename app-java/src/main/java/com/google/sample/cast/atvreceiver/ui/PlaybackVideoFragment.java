@@ -15,6 +15,7 @@
  */
 package com.google.sample.cast.atvreceiver.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -330,6 +331,21 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
         public Task<MediaLoadRequestData> onLoad(String senderId, MediaLoadRequestData loadRequestData) {
             Toast.makeText(getActivity(), "onLoad()", Toast.LENGTH_SHORT).show();
 
+            /* launch the Application instead of playing a casted video */
+            /*
+            Intent intent = new Intent();
+            String packageName = "";
+            String className = "";
+            intent.setClassName(packageName,className);
+            */
+            /* launch a Web Browser by URL instead of playing a casted video */
+            Uri uri = Uri.parse("https://qiita.com/rairaii");
+            Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+
+            startActivity(intent);
+            getActivity().finish();
+            loadRequestData = null; // always load fail
+
             if (loadRequestData == null) {
                 // Throw MediaException to indicate load failure.
                 return Tasks.forException(new MediaException(
@@ -338,7 +354,8 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
                         .setReason(MediaError.ERROR_REASON_INVALID_REQUEST)
                         .build()));
             }
-
+            return null;
+            /*
             return Tasks.call(() -> {
                 // Resolve the entity into your data structure and load media.
                 myFillMediaInfo(new MediaInfoWriter(loadRequestData.getMediaInfo()));
@@ -351,6 +368,7 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
 
                 return loadRequestData;
             });
+            */
         }
     }
 }
